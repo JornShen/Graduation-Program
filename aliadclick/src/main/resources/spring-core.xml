@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+
+    <!-- 包自动扫描　-->
+    <context:component-scan base-package="com.sch"/>
+
+    <!-- 导入配置文件 -->
+    <context:property-placeholder location="classpath:META-INF/jdbc.properties" />
+
+    <!-- spring and mybatis -->
+
+    <!-- 配置数据源 -->
+    <bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/aliclick?serverTimezone=UTC&amp;useUnicode=true&amp;characterEncoding=utf8"/>
+        <!--<property name="url" value="${jdbc.url}"/>-->
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!-- 最大的并发连接数 -->
+        <property name="maxActive" value="10"/>
+        <!-- 连接池中最大的空闲的连接数 -->
+        <property name="maxIdle"  value="10"/>
+        <!-- 最大的等待时间 ms-->
+        <property name="maxWait" value="3000"/>
+    </bean>
+
+    <!-- sql 工厂会话 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--&lt;!&ndash; mybatis 配合文件&ndash;&gt;
+        <property name="configLocation" value=""/>-->
+        <!-- 实体类映射文件路径 -->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+
+    <!-- 动态代理实现 不用写dao的实现 -->
+    <bean id="MapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+
+        <!-- 这里的 basePackage 指定了dao层接口路径，这里的dao接口不用自己实现 -->
+        <property name="basePackage" value="com.sch.dao"/>
+
+        <!-- 如果只有一个数据源的话可以不用指定，但是如果有多个数据源的话必须要指定 -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 配置事务 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 使用全注释事务 @Transaction -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <!--　此处只进行 kafka　消费者的配置, 生产者不配置, 由于此处使用了 自动获取数据, 自动提交 offerset
+     　　　无法在代码中实现灵活的等待，所以放弃这种做法.
+          此处已经配置出了一个自动监听的类, 即　KafkaConsumerListener  这个类, 自动监听数据
+     -->
+    <!--<bean id="consumerProperties" class="java.util.HashMap">
+    <constructor-arg>
+        <map>
+            <entry key="bootstrap.servers" value="localhost:9092"/>
+            <entry key="group.id" value="0"/>
+            <entry key="enable.auto.commit" value="true"/>
+            <entry key="auto.commit.interval.ms" value="1000"/>
+            <entry key="session.timeout.ms" value="15000"/>
+            <entry key="key.deserializer" value="org.apache.kafka.common.serialization.IntegerDeserializer"/>
+            <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+        </map>
+    </constructor-arg>
+    </bean>
+
+    &lt;!&ndash; 创建consumerFactory bean &ndash;&gt;
+    <bean id="consumerFactory" class="org.springframework.kafka.core.DefaultKafkaConsumerFactory">
+        <constructor-arg>
+            <ref bean="consumerProperties"/>
+        </constructor-arg>
+    </bean>
+
+    &lt;!&ndash; 执行消息消费的类&ndash;&gt;
+    <bean id="messageListenerConsumerService" class="com.sch.util.kafka.KafkaConsumerListener"/>
+
+    <bean id="containerProperties"
+          class="org.springframework.kafka.listener.config.ContainerProperties">
+        <constructor-arg value="wordsendertest" />
+        <property name="messageListener" ref="messageListenerConsumerService" />
+    </bean>
+
+    <bean id="messageListenerContainer"
+          class="org.springframework.kafka.listener.KafkaMessageListenerContainer"
+          init-method="doStart">
+        <constructor-arg ref="consumerFactory" />
+        <constructor-arg ref="containerProperties" />
+    </bean>-->
+
+</beans>

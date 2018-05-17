@@ -1,0 +1,52 @@
+大数据平台启动准备工作
+
+1. 启动 Hadoop
+cd /usr/local/hadoop
+./sbin/start-dfs.sh
+
+2. 启动Spark独立集群模式(伪分布式)
+cd /usr/local/spark
+./sbin/start-all.sh
+
+3.启动 mysql
+service mysql start
+
+4.启动 Hive
+cd /usr/local/hive
+hive --service metastore
+hive --service hiveserver2
+
+5. 启动Kafka相关环境
+(1)启动Zookeeper服务
+cd /usr/local/kafka
+./bin/zookeeper-server-start.sh config/zookeeper.properties
+
+(2) 启动Kafka服务:
+cd /usr/local/kafka
+bin/kafka-server-start.sh config/server.properties
+
+(3) 创建 aliadclick 主题
+cd /usr/local/kafka
+./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic aliadclick
+
+确认是否有该主题
+./bin/kafka-topics.sh --list --zookeeper localhost:2181
+
+在IntelliJ里面启动项目
+
+本地数据集合
+/home/atmlinux/Documents/data/aliclick/train_data.csv
+/home/atmlinux/Documents/data/aliclick/test_data.csv
+　
+hdfs数据集合
+/aliadclick/dataset/train_data.csv
+/aliadclick/dataset/test_data.csv
+
+maxBin: 32    maxDepth: 4  impurity: gini
+maxBin: 32    maxDepth: 5  impurity: gini
+
+
+
+
+
+

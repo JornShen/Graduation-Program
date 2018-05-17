@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sch.dao.PriceDisDao">
+
+    <select id="getPriceDis" resultType="int">
+        select num from pricedis where feature = #{feature, jdbcType=INTEGER} order by priceId;
+    </select>
+
+</mapper>

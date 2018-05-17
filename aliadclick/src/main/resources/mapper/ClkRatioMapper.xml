@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sch.dao.ClkRatioDao">
+
+
+    <resultMap id="ratioTmp" type="com.sch.model.tmp.RatioTmp">
+        <result property="futureId" column="futureId"/>
+        <result property="num" column="num"/>
+    </resultMap>
+
+    <select id="selectGenderRatioById" resultMap="ratioTmp">
+        SELECT gender as futureId, num FROM `genderclkratio` WHERE adgroup_id = #{id, jdbcType=INTEGER};
+    </select>
+
+    <select id="selectAgeLevelRatioById" resultMap="ratioTmp">
+        SELECT agelevel as futureId, num FROM `agelevelclkratio` WHERE adgroup_id = #{id, jdbcType=INTEGER};
+    </select>
+
+    <select id="selectPvalueLevelRatioById" resultMap="ratioTmp">
+        SELECT pvaluelevel as futureId, num FROM `pvaluelevelclkratio` WHERE adgroup_id = #{id, jdbcType=INTEGER};
+    </select>
+
+    <select id="selectShoppingLevelRatioById" resultMap="ratioTmp">
+        SELECT shoppinglevel as futureId, num FROM `shoppinglevelclkratio` WHERE adgroup_id = #{id, jdbcType=INTEGER};
+    </select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sch.dao.AdRankDao">
+
+
+    <resultMap id="adRankTmp" type="com.sch.model.tmp.AdRankTmp">
+        <result property="adgroupId" column="adgroup_id"/>
+        <result property="num" column="num"/>
+    </resultMap>
+
+    <!--  这里可以使用 ${table} 将表进行导入, 但是这样有 sql 注入的危险, 故还是选用 #{} 的形式, #{} 不能实现表变量的导入-->
+    <select id="getGenderAdRank" resultMap="adRankTmp">
+        SELECT adgroup_id, num FROM `genderadrank` WHERE gender = #{gender, jdbcType=INTEGER} order by num desc;
+    </select>
+
+    <select id="getAgeLevelAdRank" resultMap="adRankTmp">
+        SELECT adgroup_id, num FROM `ageleveladrank` WHERE age_level = #{agelevel, jdbcType=INTEGER} order by num desc;
+    </select>
+
+    <select id="getpvalueLevelAdRank" resultMap="adRankTmp">
+        SELECT adgroup_id, num FROM `pvalueleveladrank` WHERE pvalue_level = #{pvalue, jdbcType=INTEGER} order by num desc;
+    </select>
+
+    <select id="getShoppingLevelAdRank" resultMap="adRankTmp">
+        SELECT adgroup_id, num FROM `shoppingleveladrank` WHERE shopping_level = #{shopping, jdbcType=INTEGER} order by num desc;
+    </select>
+
+</mapper>
