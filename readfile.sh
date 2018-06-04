@@ -1,4 +1,6 @@
 #!/bin/bash
+# @Author JornShen
+# copyright 2018-
 # 使用说明
 # 将此文件拷到任何一个目录下，需要加上你的执行权限 sudo chmod +x readfile.sh
 # 此 shell 需要有一个配置文件，命名随意,记录什么目录下，什么后缀文件文件代码统计，这里只忽略空格行，目录一般建议使用绝对路径
