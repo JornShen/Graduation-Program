@@ -6,6 +6,6 @@ sparkpredict: It mainly includes calling spark to execute prediction code and sp
 
 readfile.sh: shell script file, statistics file in addition to the number of lines in the space, see the file for detailed use
 
-### 总体设计图如下
+### architecture design
 
 ![](./大数据平台总体设计图.png)
